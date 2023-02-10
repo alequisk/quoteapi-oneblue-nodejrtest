@@ -1,0 +1,26 @@
+-- Path: src/infra/db/mysql_schema.sql
+CREATE TABLE authors(
+  id VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  nameAsQuote VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(200) NOT NULL,
+  PRIMARY KEY (id)
+);
+CREATE TABLE quotes(
+  id VARCHAR(100) NOT NULL,
+  quote VARCHAR(100) NOT NULL,
+  createdAt DATETIME NOT NULL,
+  authorId VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (authorId) REFERENCES authors(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE likedQuotes(
+  id VARCHAR(100) NOT NULL,
+  quoteId VARCHAR(100) NOT NULL,
+  authorId VARCHAR(100) NOT NULL,
+  CONSTRAINT likedQuotes_pk UNIQUE (quoteId, authorId),
+  PRIMARY KEY (id),
+  FOREIGN KEY (quoteId) REFERENCES quotes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (authorId) REFERENCES authors(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
