@@ -1,213 +1,450 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "version": "1.0.0",
-    "description": "Api to manage quotes",
-    "contact": {
-      "name": "Álex Sousa Cruz",
-      "url": "https://www.linkedin.com/in/alequisk/",
-      "email": "alexsousa1435@gmail.com"
-    }
+    "title": "Quotes API",
+    "description": "API to manage quotes",
+    "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": "API server"
-    }
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
   ],
   "paths": {
     "/ping": {
       "get": {
-        "summary": "Ping",
-        "description": "Check if the server is up",
+        "description": "Verify if the API is running",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Server is Up!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "example": {
-                  "message": "API is running!"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/quotes": {
-      "get": {
-        "summary": "Get all quotes",
-        "description": "Get all quotes ordered by date with pagination",
-        "responses": {
-          "200": {
-            "description": "Quotes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/QuoteWithLikes"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a quote",
-        "description": "Create a quote",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Quote"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Quote created"
+            "description": "OK"
           }
         }
       }
     },
     "/author": {
       "post": {
-        "summary": "Create an author",
-        "description": "Create an author",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAuthor"
+        "tags": [
+          "authors"
+        ],
+        "description": "Create a new author",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "nameAsQuote": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
               }
             }
           }
-        },
+        ],
         "responses": {
           "201": {
-            "description": "Author created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Author"
-                }
-              }
-            }
+            "description": "Created"
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad Request"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "authors"
+        ],
+        "description": "Get info about the current author logged in",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "description": "Update an author",
+        "tags": [
+          "authors"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "authorId": {
+                  "example": "any"
                 },
-                "example": {
-                  "message": "Email already exists"
+                "id": {
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
+                },
+                "nameAsQuote": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "authors"
+        ],
+        "description": "Delete an author",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "authorId": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/quotes": {
+      "post": {
+        "tags": [
+          "quotes"
+        ],
+        "description": "Create a new quote",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "authorId": {
+                  "example": "any"
+                },
+                "quote": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "description": "Get info about a quote",
+        "tags": [
+          "quotes"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/quote": {
+      "patch": {
+        "tags": [
+          "quotes"
+        ],
+        "description": "Update a quote",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                },
+                "quote": {
+                  "example": "any"
+                },
+                "authorId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "quotes"
+        ],
+        "description": "Delete a quote",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                },
+                "authorId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/quote/{id}/like": {
+      "put": {
+        "tags": [
+          "quotes"
+        ],
+        "description": "Like a quote if not liked",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "authorId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/quote/{id}/dislike": {
+      "put": {
+        "tags": [
+          "quotes"
+        ],
+        "description": "Dislike a quote if not disliked",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "authorId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "description": "Authenticate a user, returns a token to be used in the authorization header",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     }
   },
-  "components": {
-    "schemas": {
-      "CreateAuthor": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "nameAsQuote": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        }
-      },
-      "Author": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "nameAsQuote": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        }
-      },
-      "QuoteWithLikes": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "author": {
-            "type": "string"
-          },
-          "quote": {
-            "type": "string"
-          },
-          "likes": {
-            "type": "number"
-          },
-          "createdAt": {
-            "type": "string"
-          }
-        }
-      },
-      "Quote": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Id of the quote"
-          },
-          "author": {
-            "type": "string",
-            "description": "Author of the quote"
-          },
-          "quote": {
-            "type": "string",
-            "description": "Quote"
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Date of creation of the quote"
-          }
-        }
-      }
-    }
-  }
+  "scheme": [
+    "http"
+  ]
 }
